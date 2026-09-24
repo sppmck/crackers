@@ -1,0 +1,1373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#5C1A1B">
+<meta name="description" content="SPPM Crackers — Diwali price list. Browse, add to order, and send your order on WhatsApp.">
+<title>SPPM Crackers — Diwali Order</title>
+<!-- rocket favicon, inlined so the page stays a single file. Just the rocket,
+     not the full lockup — the chakkar and sparks turn to mud at 16px. -->
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%235C1A1B'/><path d='M16 3 21 13H11Z' fill='%23F2B33D'/><rect x='11.4' y='13' width='9.2' height='11' rx='1.4' fill='%23C25E00'/><rect x='11.4' y='16' width='9.2' height='3' fill='%23F2B33D'/><path d='M11.4 22 7.6 28h3.8Z' fill='%23E8630A'/><path d='M20.6 22 24.4 28h-3.8Z' fill='%23E8630A'/></svg>">
+<!-- ═══ WhatsApp / social link preview ═══════════════════════════════
+     The page spreads by WhatsApp forwarding, so these decide whether a
+     forward shows a card or a bare blue link.
+
+     og:url and og:image MUST be absolute URLs — WhatsApp will not
+     resolve a relative path. Two things to do before this works:
+       1. Replace SITE_BASE below with the live address, e.g.
+          https://yourname.github.io/sppm-crackers
+       2. Add og-card.jpg (1200×630) to this folder. Use JPEG, not
+          WebP — WhatsApp's WebP preview support is unreliable.
+     ══════════════════════════════════════════════════════════════════ -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="SPPM Crackers">
+<meta property="og:title" content="SPPM Crackers — Diwali price list">
+<meta property="og:description" content="191 crackers with live prices. Add what you want and send the order straight to us on WhatsApp.">
+<meta property="og:url" content="https://SITE_BASE/diwali.html">
+<meta property="og:image" content="https://SITE_BASE/og-card.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="SPPM Crackers Diwali price list">
+<meta name="twitter:card" content="summary_large_image">
+<!-- ═══ Display face — headings only ═════════════════════════════════
+     Fraunces is used for the wordmark, the 26 category names and two
+     sheet labels. Nothing with a digit in it uses this font: every ₹
+     amount stays in system-ui so tabular figures keep working.
+     This is the page's only external dependency besides analytics.
+     Delete these two <link>s and --display falls back to Georgia.
+     ══════════════════════════════════════════════════════════════════ -->
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..700&display=swap">
+<style>
+:root{
+  --maroon:#5C1A1B; --maroon-2:#7A2E2A; --gold:#F2B33D; --gold-soft:#E8C9A0;
+  --cream:#FFF8EE; --band:#F7E7C6; --band-line:#E5CFA3; --ink:#3A2A18;
+  --ink-soft:#8A6A2F; --ink-mute:#9A7B4F; --saffron:#C25E00; --wa:#1FAA53;
+  --display:'Fraunces',Georgia,'Times New Roman',serif;
+  /* header height, kept in sync from JS — the open category header sticks
+     directly beneath the app bar, which shrinks once you scroll. */
+  --hdr:150px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;overscroll-behavior-y:none}
+body{margin:0;background:var(--cream);color:var(--ink);
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  font-size:15px;line-height:1.45;padding-bottom:124px;touch-action:manipulation;
+  overscroll-behavior-y:none}
+.wrap{max-width:640px;margin:0 auto}
+/* Paper grain — one inline SVG tile, ~520 bytes, no network request. Stops
+   the cream reading as plain #FFF8EE.
+   Deliberately NOT a position:fixed overlay pseudo-element: a full-viewport
+   fixed layer over a 5,000px scroll container broke painting outright in
+   testing, and it's a known repaint hazard on iOS Safari. This is just a
+   tiled background-image on the body, so there's no extra layer, no
+   stacking context and nothing to composite. The 6% opacity and the
+   desaturation are baked into the SVG itself. */
+body{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='170' height='170'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='170' height='170' filter='url(%23g)' opacity='.06'/%3E%3C/svg%3E");
+  background-size:170px 170px}
+/* Tabular figures — this is a price list, so every ₹ amount and count
+   gets fixed-width digits and lines up down the column. */
+.pr,.cat-count,.cb-count,.cb-total,.cb-cta,.step .q,
+.orow .omt,.orow .oline,.total-row .tv,#lbsub,.note{font-variant-numeric:tabular-nums}
+
+/* ═══ App bar ═════════════════════════════════════════════════════════
+   The striped bunting is gone. In its place the header is lit from behind
+   the motif with a radial gradient (no image), and closed with a single
+   gold hairline that fades out at both edges.
+   ═══════════════════════════════════════════════════════════════════ */
+header.top{position:sticky;top:0;z-index:20;
+  background:radial-gradient(135% 105% at 15% -15%,#8F3C2D 0%,rgba(143,60,45,0) 58%),var(--maroon);
+  box-shadow:0 8px 20px -14px rgba(74,20,22,.75)}
+.top-in{padding:11px 16px;display:flex;align-items:center;gap:11px;
+  max-height:72px;opacity:1;overflow:hidden;
+  transition:max-height .24s ease,opacity .16s ease,padding .24s ease}
+/* Scrolled state: the wordmark row folds away so search + chips stay
+   reachable without the bar eating a fifth of a phone screen. */
+header.top.compact .top-in{max-height:0;opacity:0;padding-top:0;padding-bottom:0}
+.motif{flex:0 0 auto}
+/* The chakkar spins twice on arrival, then stops. A forever-spinning icon
+   on a transactional page is a distraction and a battery cost; one turn on
+   load is the whole charm. Killed entirely by the reduced-motion block. */
+@keyframes chakkarSpin{from{transform:rotate(0)}to{transform:rotate(720deg)}}
+.motif .chakkar{transform-box:view-box;transform-origin:31.5px 23px;
+  animation:chakkarSpin 1.5s cubic-bezier(.25,.8,.3,1) both}
+h1{margin:0;font-family:var(--display);font-size:23px;font-weight:700;
+  color:var(--gold);letter-spacing:-.3px;line-height:1.1}
+.tag{margin:3px 0 0;font-size:12px;color:var(--gold-soft)}
+.searchbox{padding:0 16px 10px}
+.searchbox input{width:100%;border:1px solid rgba(232,201,160,.22);background:rgba(255,243,223,.1);
+  color:#FFF3DF;border-radius:12px;padding:10px 13px;font-size:15px;outline:none}
+.searchbox input::placeholder{color:rgba(232,201,160,.75)}
+
+/* ═══ Category chips ══════════════════════════════════════════════════
+   With 3 sections open there are 29 rows before the collapsed list, so
+   Sparklers and Flowerpots were ~3 screens down. Tap to jump + expand.
+   The active chip tracks whichever category you're scrolled into.
+   ═══════════════════════════════════════════════════════════════════ */
+.chips{display:flex;gap:7px;overflow-x:auto;padding:0 16px 11px;
+  scrollbar-width:none;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:0 0 auto;background:rgba(255,243,223,.1);border:1px solid rgba(232,201,160,.26);
+  color:#FFEFD6;font-size:12.5px;font-weight:500;padding:6px 13px;border-radius:999px;
+  white-space:nowrap;transition:background-color .18s ease,border-color .18s ease,color .18s ease}
+.chip[aria-current="true"]{background:var(--gold);border-color:var(--gold);
+  color:#4A2800;font-weight:600}
+.bunting{height:1px;background:linear-gradient(90deg,
+  rgba(242,179,61,0),rgba(242,179,61,.5) 16%,rgba(242,179,61,.5) 84%,rgba(242,179,61,0))}
+#topsent{position:absolute;top:0;left:0;width:1px;height:44px;pointer-events:none}
+
+/* ═══ Featured pack ══════════════════════════════════════════════════
+   The first combo is what most people arrive wanting, so it gets a card
+   above the catalogue instead of being row 1 of 191. It is the same
+   product as the list row — its stepper and the row's stay in sync, and
+   "View in list" jumps to the row and flashes it.
+   ═══════════════════════════════════════════════════════════════════ */
+.hero{margin:14px 16px 4px;background:#fff;border-radius:18px;padding:13px 14px 14px;
+  box-shadow:inset 4px 0 0 var(--saffron),inset 0 0 0 1px rgba(92,26,27,.08),
+             0 8px 22px -12px rgba(92,26,27,.3)}
+.hero[hidden]{display:none}
+.hero-badges{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px 4px}
+.hero-badge{font-size:10.5px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;
+  padding:4px 9px;border-radius:7px;white-space:nowrap}
+.hero-badge.hot{background:#B5301C;color:#FFF0DC}
+.hero-badge.save{background:#1D6B3A;color:#E7F6EC}
+.hero-body{display:flex;gap:12px;align-items:flex-start;padding-left:4px}
+.hero-thb{flex:0 0 auto;width:88px;height:88px;border-radius:13px;background:#FCF1DC;
+  box-shadow:inset 0 0 0 1px rgba(92,26,27,.09);overflow:hidden;position:relative;cursor:zoom-in}
+.hero-thb img{width:100%;height:100%;object-fit:contain;display:block;transition:transform .2s ease}
+.hero-thb:empty{cursor:default}
+.hero-thb:empty::after{content:'✦';position:absolute;inset:0;display:flex;align-items:center;
+  justify-content:center;color:var(--band-line);font-size:26px}
+.hero-txt{flex:1;min-width:0}
+.hero-name{display:inline;margin:0;font-family:var(--display);font-size:19px;font-weight:700;
+  color:var(--maroon);letter-spacing:-.3px;line-height:1.2;text-wrap:pretty}
+.hero-code{display:inline-block;margin-left:6px;vertical-align:2px;font-size:10.5px;
+  font-weight:600;color:var(--ink-soft);background:var(--band);border-radius:5px;
+  padding:2px 6px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.hero-code:empty{display:none}
+.hero-blurb{margin:7px 0 0;font-size:12.5px;line-height:1.45;color:#6E4E1E;text-wrap:pretty}
+.hero-blurb:empty{display:none}
+.hero-pricerow{display:flex;align-items:baseline;flex-wrap:wrap;gap:8px;margin-top:9px}
+.hero-price{font-size:23px;font-weight:700;color:var(--saffron);line-height:1;
+  font-variant-numeric:tabular-nums}
+.hero-was{font-size:13px;color:var(--ink-mute);text-decoration:line-through;
+  font-variant-numeric:tabular-nums}
+.hero-was:empty,.hero-off:empty{display:none}
+.hero-off{font-size:11px;font-weight:700;color:#1D6B3A;background:#E7F6EC;
+  border:1px solid #BCE3C8;border-radius:6px;padding:2px 7px}
+.hero-actions{display:flex;align-items:center;gap:12px;margin:13px 0 0 4px}
+.hero-add{flex:1;background:var(--saffron);border:none;color:#FFF6E8;font-size:14.5px;
+  font-weight:600;border-radius:12px;padding:12px 14px}
+.hero-step{display:none;flex:1;justify-content:center}
+.hero .hero-step{border-radius:12px}
+.hero-step button{width:46px;height:46px;font-size:22px}
+.hero-step .q{min-width:34px;font-size:15px}
+.hero.on .hero-add{display:none}
+.hero.on .hero-step{display:flex}
+.hero-jump{flex:0 0 auto;background:transparent;border:none;color:var(--ink-soft);
+  font-size:12.5px;font-weight:600;padding:8px 2px;text-decoration:underline}
+
+/* the same product's row in the catalogue, marked so the two read as one */
+.item.feat{background:#FFFBF0;box-shadow:inset 3px 0 0 var(--saffron);
+  border-radius:11px;margin:0 -9px;padding-left:12px;padding-right:9px}
+.feat-tag{display:inline-block;margin-bottom:3px;font-size:9.5px;font-weight:700;
+  letter-spacing:.4px;text-transform:uppercase;color:#B5301C;
+  background:#FBE6E0;border-radius:5px;padding:2px 6px}
+@keyframes rowFlash{
+  0%{background:#FFE9B8}
+  100%{background:#FFFBF0}}
+.item.feat.flash{animation:rowFlash 1.1s ease-out}
+
+main{padding:0}
+/* ═══ Category headers ═══════════════════════════════════════════════
+   The filled beige bars are gone — 26 full-bleed bands read as an
+   accordion widget. Cream ground, a short gold rule as the marker, and
+   the open header sticks under the app bar so you always know which
+   section you're 20 rows into.
+   ═══════════════════════════════════════════════════════════════════ */
+details.cat{border-bottom:1px solid #EFDFC4}
+summary.cat-head{list-style:none;cursor:pointer;background:var(--cream);
+  padding:17px 16px 11px;display:flex;justify-content:space-between;align-items:flex-end;gap:8px;
+  -webkit-user-select:none;user-select:none}
+summary.cat-head::-webkit-details-marker{display:none}
+details.cat[open] summary.cat-head{position:sticky;top:var(--hdr);z-index:6;
+  border-bottom:1px solid #EFDFC4;margin-bottom:-1px}
+.cat-name{position:relative;padding-top:11px;font-family:var(--display);
+  font-size:17.5px;font-weight:600;letter-spacing:-.25px;color:var(--maroon);line-height:1.15}
+.cat-name::before{content:'';position:absolute;top:0;left:0;width:22px;height:2px;
+  background:var(--gold);border-radius:1px}
+.cat-count{font-size:12px;color:var(--ink-mute);white-space:nowrap;display:flex;align-items:center;gap:5px}
+.chev{transition:transform .15s ease;font-size:11px}
+details[open] .chev{transform:rotate(90deg)}
+.items{padding:0 16px;background:var(--cream)}
+.item{display:flex;justify-content:space-between;align-items:center;gap:11px;
+  padding:11px 0;border-bottom:1px solid #F4E8D6}
+.item:last-child{border-bottom:none}
+.nm{font-size:14.5px;font-weight:500;text-wrap:pretty;line-height:1.3}
+.mt{font-size:12px;color:var(--ink-mute);margin-top:2px}
+/* Price gets its own right-hand column instead of hiding inside the
+   metadata line, and sits directly above the control that acts on it.
+   It's ink, not saffron — saffron now means one thing only: "add this". */
+.pr{font-size:15px;font-weight:600;color:var(--ink);line-height:1}
+.ctl{flex:0 0 auto;display:flex;flex-direction:column;align-items:flex-end;gap:7px}
+.txt{flex:1;min-width:0}
+.thb{flex:0 0 auto;width:84px;height:84px;border-radius:14px;background:#FCF1DC;
+  box-shadow:inset 0 0 0 1px rgba(92,26,27,.09);overflow:hidden;position:relative;cursor:zoom-in}
+.thb img{width:100%;height:100%;object-fit:contain;display:block}
+.thb:empty{cursor:default}
+.thb:empty::after{content:'✦';position:absolute;inset:0;display:flex;align-items:center;
+  justify-content:center;color:var(--band-line);font-size:24px}
+#lbox{position:fixed;inset:0;z-index:50;background:rgba(28,14,4,.95);display:none;
+  align-items:center;justify-content:center;flex-direction:column;padding:14px}
+#lbox.on{display:flex}
+/* dvh, not vh — vh is the *largest* viewport on mobile Safari, so with the
+   URL bar showing the photo overflowed and the caption got pushed off. */
+#lbox img{max-width:100%;max-height:76vh;max-height:76dvh;object-fit:contain;border-radius:8px}
+#lbcap{color:var(--gold);font-size:14px;font-weight:600;margin-top:14px;text-align:center}
+#lbsub{color:var(--gold-soft);font-size:12px;margin-top:3px}
+#lbx{position:absolute;top:calc(10px + env(safe-area-inset-top));right:12px;width:40px;height:40px;
+  border:none;border-radius:50%;background:rgba(255,243,223,.16);color:#FFF3DF;font-size:23px;line-height:1}
+button{font-family:inherit;cursor:pointer}
+.add{border:1.5px solid var(--saffron);color:var(--saffron);background:transparent;
+  border-radius:11px;padding:7px 16px;font-size:13.5px;font-weight:600}
+.step{display:none;align-items:center;gap:2px;background:#fff;
+  border:1px solid #EAD6B4;border-radius:11px;overflow:hidden;
+  box-shadow:0 1px 3px rgba(92,26,27,.07)}
+.step button{border:none;background:transparent;color:var(--saffron);
+  font-size:19px;font-weight:600;width:38px;height:38px;line-height:1}
+.step .q{min-width:26px;text-align:center;font-size:14px;font-weight:600}
+.item.on .add{display:none}
+.item.on .step{display:flex}
+.hide{display:none!important}
+#noresult{display:none;padding:28px 16px;text-align:center;color:var(--ink-mute);font-size:14px}
+section.terms{margin:20px 16px 8px}
+details.tc{background:#FDF3E0;border:1px solid var(--band-line);border-radius:12px;overflow:hidden}
+details.tc summary{list-style:none;cursor:pointer;padding:12px 14px;font-size:14px;
+  font-weight:600;color:#5C3A00;display:flex;justify-content:space-between;align-items:center}
+details.tc summary::-webkit-details-marker{display:none}
+.tc-body{padding:0 14px 12px;font-size:13px;color:#6E4E1E}
+.tc-body ul{margin:6px 0;padding-left:18px}
+.tc-body li{margin:5px 0}
+.tc-body h3{font-size:13px;margin:10px 0 2px;color:#5C3A00}
+footer{padding:16px;text-align:center;font-size:12px;color:var(--ink-mute)}
+/* ═══ Cart pill ═══════════════════════════════════════════════════════
+   Was a full-bleed bar welded to the bottom edge with the progress bar
+   as a 4px strip on its top edge. Now a floating pill with a
+   maroon-tinted shadow (not black — the shadow carries the surface's
+   own hue), and the progress track lives inside it.
+   ═══════════════════════════════════════════════════════════════════ */
+#cartbar{position:fixed;left:10px;right:10px;bottom:calc(10px + env(safe-area-inset-bottom));
+  margin:0 auto;max-width:620px;z-index:25;
+  background:var(--maroon);border:none;text-align:left;
+  display:flex;flex-direction:column;gap:10px;
+  padding:12px 12px 11px 15px;border-radius:18px;
+  box-shadow:0 14px 34px rgba(74,20,22,.34),0 2px 8px rgba(74,20,22,.22);
+  transform:translateY(170%);transition:transform .26s cubic-bezier(.2,.8,.25,1)}
+#cartbar.show{transform:translateY(0)}
+.cb-row{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.cb-txt{display:flex;flex-direction:column;min-width:0}
+.cb-topline{display:flex;align-items:center;gap:7px}
+#cbbar{position:relative;display:block;height:6px;border-radius:3px;
+  background:rgba(255,243,223,.15);overflow:hidden}
+/* easeOutQuint on the width — the old ease crept. This lands. */
+#cbfill{position:relative;display:block;height:100%;width:0;background:var(--gold);
+  border-radius:3px;overflow:hidden;
+  transition:width .45s cubic-bezier(.22,1,.36,1),background-color .25s ease}
+#cbfill.ok{background:#45D883}
+#cbtick{position:absolute;top:0;height:6px;width:2px;background:rgba(255,248,238,.8);border-radius:1px}
+
+/* ═══ Fill feedback on every add ══════════════════════════════════════
+   A light sweeps the length of the fill and the fill brightens, so each
+   product you add registers on the bar as well as in the number.
+   ═══════════════════════════════════════════════════════════════════ */
+#cbfill::after{content:'';position:absolute;inset:0;opacity:0;
+  background:linear-gradient(100deg,transparent 18%,rgba(255,255,255,.9) 50%,transparent 82%)}
+@keyframes cbSheen{
+  0%{transform:translateX(-102%);opacity:0}
+  18%{opacity:1}
+  100%{transform:translateX(102%);opacity:0}}
+@keyframes cbBrighten{
+  0%,100%{filter:brightness(1)}
+  32%{filter:brightness(1.4)}}
+#cbfill.bump::after{animation:cbSheen .6s ease-out}
+#cbfill.bump{animation:cbBrighten .5s ease-out}
+/* ═══ Cart caption ════════════════════════════════════════════════════
+   "4 items · ₹935 to free delivery". This line carries the only blocker
+   message on the page — "₹3,000 more to order" — so it is colour-coded
+   by state rather than one muted tone for all three, with the amount
+   bold. Contrast on the maroon pill: 9.7:1 below minimum, 10.4:1 mid,
+   8.7:1 at free delivery — all past AAA for body text.
+   (This rule went missing when the fill animations were added, which
+   dropped the caption to the button's black UA default at 1.6:1.)
+   ═══════════════════════════════════════════════════════════════════ */
+.cb-count{font-size:12.5px;line-height:1.35;margin-top:3px;
+  color:rgba(255,243,223,.72)}
+.cb-sep{opacity:.45}
+.cb-note{font-weight:600;color:#FFEFD6}
+.cb-note b{font-weight:700}
+.cb-note.lo{color:#FFD9A0}   /* under the minimum — you cannot send yet */
+.cb-note.mid{color:#FFEFD6}  /* valid order, free delivery still ahead */
+.cb-note.ok{color:#7FE8A8}   /* free delivery reached, matches the green fill */
+
+/* the running total gives a small nod too */
+@keyframes cbTotalPop{0%,100%{transform:scale(1)}34%{transform:scale(1.11)}}
+.cb-total{font-size:19px;font-weight:700;color:var(--gold);line-height:1.1;
+  transform-origin:left center}
+.cb-total.pop{animation:cbTotalPop .34s ease-out}
+
+/* ═══ Minimum-order blast ═════════════════════════════════════════════
+   Appears beside the total the moment the order becomes sendable, and
+   stays put after that — it's a status, not just a celebration.
+   ═══════════════════════════════════════════════════════════════════ */
+#cbblast{flex:0 0 auto;width:19px;height:19px;display:none}
+#cbblast.on{display:block}
+@keyframes cbBlast{
+  0%{transform:scale(.2) rotate(-55deg);opacity:0}
+  55%{transform:scale(1.32) rotate(10deg);opacity:1}
+  100%{transform:scale(1) rotate(0);opacity:1}}
+#cbblast.pop{animation:cbBlast .58s cubic-bezier(.34,1.56,.64,1)}
+.cb-cta{flex:0 0 auto;background:var(--gold);color:#4A2800;font-size:13.5px;font-weight:600;
+  border-radius:11px;padding:10px 14px}
+/* The one earned moment of motion: a single gold flare when the order
+   crosses the free-delivery threshold. Fires on the crossing only. */
+@keyframes cbFlare{
+  0%{box-shadow:0 14px 34px rgba(74,20,22,.34),0 0 0 0 rgba(242,179,61,.6)}
+  100%{box-shadow:0 14px 34px rgba(74,20,22,.34),0 0 0 20px rgba(242,179,61,0)}}
+#cartbar.flare{animation:cbFlare .7s ease-out}
+#sheet{position:fixed;inset:0;z-index:30;background:var(--cream);overflow-y:auto;
+  -webkit-overflow-scrolling:touch;display:none}
+#sheet.open{display:block}
+.sh-head{position:sticky;top:0;background:var(--maroon);z-index:5;
+  display:flex;align-items:center;gap:10px;padding:14px 16px}
+.sh-back{background:transparent;border:none;color:var(--gold-soft);font-size:22px;
+  line-height:1;padding:2px 6px 4px}
+.sh-title{font-family:var(--display);font-size:19px;font-weight:600;color:var(--gold);letter-spacing:-.2px}
+.sh-body{max-width:640px;margin:0 auto;padding:14px 16px calc(30px + env(safe-area-inset-bottom))}
+/* ═══ Order rows ══════════════════════════════════════════════════════
+   Each row carries the product photo now. It's the same thumb file the
+   catalogue already loaded, so it comes from cache — nothing already in
+   the cart costs an extra request. The stepper sits under the name
+   rather than beside it: with a photo and a line total on the row too,
+   four columns left the name about 115px on a 375px screen.
+   ═══════════════════════════════════════════════════════════════════ */
+.orow{display:flex;align-items:flex-start;gap:11px;padding:11px 0;font-size:13.5px;
+  border-bottom:1px solid #F4E8D6}
+.orow:last-child{border-bottom:none}
+.othb{flex:0 0 auto;width:56px;height:56px;border-radius:12px;background:#FCF1DC;
+  box-shadow:inset 0 0 0 1px rgba(92,26,27,.09);overflow:hidden;position:relative;cursor:zoom-in}
+.othb img{width:100%;height:100%;object-fit:contain;display:block}
+/* same no-image fallback as the catalogue: onerror strips the <img>, and
+   the empty tile renders a ✦. No hardcoded list of missing products. */
+.othb:empty{cursor:default}
+.othb:empty::after{content:'✦';position:absolute;inset:0;display:flex;align-items:center;
+  justify-content:center;color:var(--band-line);font-size:19px}
+.orow .oi{flex:1;min-width:0;display:flex;flex-direction:column;align-items:flex-start}
+.orow .onm{overflow-wrap:anywhere;text-wrap:pretty;font-weight:500;line-height:1.3}
+.orow .omt{font-size:11.5px;color:var(--ink-mute);margin-top:1px}
+.orow .oline{flex:0 0 auto;font-weight:600;white-space:nowrap;font-size:14.5px;padding-top:1px}
+.orow .step{display:flex;margin-top:8px}
+.orow .step button{width:32px;height:32px;font-size:17px}
+.total-row{display:flex;justify-content:space-between;align-items:center;
+  border-top:2px solid var(--band-line);margin-top:8px;padding:12px 0 4px}
+.total-row .tl{font-family:var(--display);font-size:17px;font-weight:600;color:var(--maroon)}
+.total-row .tv{font-size:19px;font-weight:700;color:var(--maroon)}
+.note{border-radius:9px;padding:9px 12px;font-size:12.5px;margin:10px 0}
+.note.warn{background:#FDF0DC;border:1px solid var(--band-line);color:#8A5A00}
+.note.ok{background:#E7F6EC;border:1px solid #BCE3C8;color:#1D6B3A}
+.fld{margin-top:14px}
+.fld label{display:block;font-size:12.5px;color:var(--ink-soft);margin-bottom:5px;font-weight:600}
+.fld input,.fld textarea{width:100%;background:#fff;border:1px solid var(--band-line);border-radius:9px;
+  padding:11px 12px;font-size:15px;color:var(--ink);outline:none;font-family:inherit;resize:vertical}
+.fld input:focus,.fld textarea:focus{border-color:var(--saffron)}
+.fld .opt{font-weight:400;color:var(--ink-mute)}
+.err{display:none;font-size:12px;color:#B3261E;margin-top:4px}
+.err.show{display:block}
+#sendbtn{width:100%;margin-top:18px;background:var(--wa);border:none;color:#fff;
+  font-size:15.5px;font-weight:600;border-radius:11px;padding:14px;display:flex;
+  align-items:center;justify-content:center;gap:8px}
+#sendbtn:disabled{background:#A8CBB4;cursor:not-allowed}
+.sh-foot{margin-top:10px;text-align:center;font-size:12px;color:var(--ink-mute)}
+.empty{padding:40px 0;text-align:center;color:var(--ink-mute);font-size:14px}
+.clearbtn{display:none;margin:4px 0 0 auto;background:transparent;border:none;
+  color:#B3261E;font-size:13px;font-weight:600;padding:8px 2px;text-decoration:underline}
+#snack{position:fixed;left:12px;right:12px;bottom:calc(14px + env(safe-area-inset-bottom));
+  margin:0 auto;max-width:520px;z-index:40;background:#3A2A18;color:#FFF3DF;
+  border-radius:12px;padding:12px 14px;display:none;align-items:center;gap:10px;
+  flex-wrap:wrap;font-size:13.5px}
+#snack.show{display:flex}
+#snack .sp{flex:1;min-width:140px}
+#snack button{border:none;border-radius:8px;padding:8px 12px;font-size:13px;font-weight:600}
+#snack .new{background:var(--gold);color:#4A2800}
+#snack .keep{background:transparent;color:var(--gold-soft);text-decoration:underline}
+
+/* ═══ Interaction states ══════════════════════════════════════════════
+   Nothing on the page acknowledged a tap before this. On touch that
+   reads as a dropped tap, which on a stepper makes people press twice.
+   ═══════════════════════════════════════════════════════════════════ */
+summary.cat-head,.sh-back,#lbx,.clearbtn,.searchbox input,.chip{
+  transition:background-color .18s ease,color .18s ease,border-color .18s ease}
+.add,.step button,.cb-cta,#sendbtn,#snack button{
+  transition:background-color .18s ease,color .18s ease,border-color .18s ease,transform .08s ease}
+.thb img,.othb img{transition:transform .2s ease}
+
+/* pressed */
+.add:active,.step button:active,#snack button:active{transform:scale(.94)}
+#sendbtn:not(:disabled):active{transform:scale(.985)}
+#cartbar:active .cb-cta{transform:scale(.95)}
+summary.cat-head:active .cat-name{color:#8A2E26}
+.chip:active{background:rgba(255,243,223,.24)}
+.thb:not(:empty):active img,.othb:not(:empty):active img{transform:scale(.95)}
+
+/* hover, gated so a tap on a phone doesn't leave the style stuck on */
+@media(hover:hover){
+  summary.cat-head:hover .cat-name{color:#8A2E26}
+  .chip:hover{background:rgba(255,243,223,.2);border-color:rgba(232,201,160,.45)}
+  .chip[aria-current="true"]:hover{background:#F7C15A}
+  .add:hover{background:#FFF1DF}
+  .step button:hover{background:#FFF6E8}
+  #sendbtn:not(:disabled):hover{background:#1B9A4A}
+  #cartbar:hover .cb-cta{background:#F7C15A}
+  #lbx:hover{background:rgba(255,243,223,.3)}
+  .sh-back:hover{color:var(--gold)}
+  .clearbtn:hover{color:#8C1D18}
+  .thb:not(:empty):hover img,.othb:not(:empty):hover img{transform:scale(1.06)}
+}
+
+/* ═══ Keyboard focus ══════════════════════════════════════════════════
+   The search input and the checkout fields set outline:none with no
+   replacement, which left keyboard users with no visible position.
+   :focus-visible restores a ring without showing it on tap.
+   ═══════════════════════════════════════════════════════════════════ */
+:focus-visible{outline:2px solid var(--saffron);outline-offset:2px}
+/* gold on the maroon surfaces — saffron on maroon is unreadable */
+.searchbox input:focus-visible,.sh-back:focus-visible,#lbx:focus-visible,.chip:focus-visible{
+  outline:2px solid var(--gold);outline-offset:2px}
+/* inset, or the ring is clipped by the bottom of the viewport */
+#cartbar:focus-visible{outline:2px solid var(--gold);outline-offset:-4px}
+.fld input:focus-visible,.fld textarea:focus-visible{outline-offset:1px}
+
+/* ═══ Reduced motion ═════════════════════════════════════════════════ */
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{transition-duration:.01ms!important;
+    animation-duration:.01ms!important;animation-iteration-count:1!important}
+}
+@media(min-width:720px){body{font-size:16px}}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <div class="top-in">
+      <!-- Three shapes only: rocket, ground chakkar, two sparks. Enough to
+           read as Diwali at 44px; any more and it stops being a lockup. -->
+      <svg class="motif" width="44" height="33" viewBox="0 0 44 33" aria-hidden="true">
+        <!-- rocket -->
+        <path d="M10.8 1.5 14.4 9.6H7.2Z" fill="#F2B33D"/>
+        <rect x="7.4" y="9.6" width="6.8" height="11.2" rx="1.1" fill="#C25E00"/>
+        <rect x="7.4" y="12.9" width="6.8" height="2.5" fill="#F2B33D"/>
+        <path d="M7.4 19.4 4.5 24.4h2.9Z" fill="#E8630A"/>
+        <path d="M14.2 19.4 17.1 24.4h-2.9Z" fill="#E8630A"/>
+        <rect x="10.2" y="20.6" width="1.2" height="10.4" rx=".6" fill="#A87243"/>
+        <!-- ground chakkar: a true two-turn spiral, built from four
+             semicircular arcs of growing radius, with the lit tip at the end -->
+        <g class="chakkar">
+          <!-- 2.5 turns, wound tight on purpose. A loosely-spaced spiral is
+               legible at 8x but reads as a "9" at the 14px it actually ships
+               at; wound tight it reads as a coil, which is what a lit
+               chakkar looks like. -->
+          <path d="M32.7 23A1.8 1.8 0 0 1 29.1 23A3 3 0 0 1 35.1 23A4.2 4.2 0 0 1 26.7 23A5.4 5.4 0 0 1 37.5 23"
+                fill="none" stroke="#F2B33D" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="31.5" cy="23" r="1.1" fill="#E8630A"/>
+          <circle cx="37.5" cy="23" r="1.3" fill="#FFF3DF"/>
+        </g>
+        <!-- two sparkles. Concave 4-point stars, not crossed strokes — a
+             vertical plus a horizontal stroke just draws a plus sign. -->
+        <path d="M24.5 3.4Q25.04 6.26 27.9 6.8Q25.04 7.34 24.5 10.2Q23.96 7.34 21.1 6.8Q23.96 6.26 24.5 3.4Z"
+              fill="#E8C9A0"/>
+        <path d="M38.8 8.6Q39.18 10.62 41.2 11Q39.18 11.38 38.8 13.4Q38.42 11.38 36.4 11Q38.42 10.62 38.8 8.6Z"
+              fill="#E8C9A0" opacity=".8"/>
+      </svg>
+      <div>
+        <h1 id="shopname">SPPM Crackers</h1>
+        <p class="tag" id="tagline">Diwali price list · Minimum order ₹3,000</p>
+      </div>
+    </div>
+    <div class="searchbox">
+      <input id="search" type="search" placeholder="Search products…" autocomplete="off" aria-label="Search products">
+    </div>
+    <nav class="chips" id="chips" aria-label="Jump to category"></nav>
+  </div>
+  <div class="bunting"></div>
+</header>
+<!-- Out-of-flow probe: once it leaves the viewport the wordmark row folds
+     away, so search + chips stay reachable without a tall app bar. -->
+<div id="topsent" aria-hidden="true"></div>
+
+<div class="wrap">
+  <!-- Featured pack. Everything inside is filled from CONFIG.FEATURED; the
+       whole section stays hidden if FEATURED.serial is null or unknown. -->
+  <section class="hero" id="hero" hidden aria-labelledby="heroname">
+    <div class="hero-badges" id="herobadges"></div>
+    <div class="hero-body">
+      <div class="hero-thb" id="herothb"></div>
+      <div class="hero-txt">
+        <h2 class="hero-name" id="heroname"></h2><span class="hero-code" id="herocode"></span>
+        <p class="hero-blurb" id="heroblurb"></p>
+        <div class="hero-pricerow">
+          <span class="hero-price" id="heroprice"></span>
+          <span class="hero-was" id="herowas"></span>
+          <span class="hero-off" id="herooff"></span>
+        </div>
+      </div>
+    </div>
+    <div class="hero-actions">
+      <button class="hero-add" id="heroadd" data-a="inc"></button>
+      <div class="hero-step step" id="herostep">
+        <button data-a="dec" aria-label="Decrease quantity">−</button>
+        <span class="q" id="heroq">0</span>
+        <button data-a="inc" aria-label="Increase quantity">+</button>
+      </div>
+      <button class="hero-jump" id="herojump">View in list ↓</button>
+    </div>
+  </section>
+
+  <main id="catalog" aria-label="Product catalog"></main>
+  <div id="noresult">No products match your search.</div>
+
+  <section class="terms">
+    <details class="tc">
+      <summary>Terms and conditions <span class="chev">▶</span></summary>
+      <div class="tc-body" id="tcbody"></div>
+    </details>
+  </section>
+
+  <footer id="foot"></footer>
+</div>
+
+<button id="cartbar" aria-label="View your order">
+  <span class="cb-row">
+    <span class="cb-txt">
+      <span class="cb-topline">
+        <span class="cb-total" id="cbtotal">₹0</span>
+        <!-- minimum-order blast: gold rays, cream core -->
+        <svg id="cbblast" viewBox="0 0 24 24" aria-hidden="true">
+          <g stroke="#F2B33D" stroke-width="2.3" stroke-linecap="round">
+            <path d="M12 1.4v4.2M12 18.4v4.2M1.4 12h4.2M18.4 12h4.2"/>
+            <path d="M4.5 4.5 7.4 7.4M16.6 16.6l2.9 2.9M19.5 4.5 16.6 7.4M7.4 16.6l-2.9 2.9"/>
+          </g>
+          <circle cx="12" cy="12" r="3.4" fill="#FFF3DF"/>
+        </svg>
+      </span>
+      <span class="cb-count"><span id="cbitems">0 items</span><span class="cb-sep"> · </span><span class="cb-note" id="cbnote"></span></span>
+    </span>
+    <span class="cb-cta">View order →</span>
+  </span>
+  <span id="cbbar"><span id="cbfill"></span><span id="cbtick"></span></span>
+</button>
+
+<div id="sheet" role="dialog" aria-label="Your order">
+  <div class="sh-head">
+    <button class="sh-back" id="backbtn" aria-label="Back to products">←</button>
+    <span class="sh-title">Your order</span>
+  </div>
+  <div class="sh-body">
+    <div id="orderlist"></div>
+    <div class="total-row"><span class="tl">Total</span><span class="tv" id="shtotal">₹0</span></div>
+    <button class="clearbtn" id="clearbtn">Clear order</button>
+    <div class="note warn" id="minnote"></div>
+    <div class="note" id="shipnote"></div>
+    <div class="fld">
+      <label for="cname">Name</label>
+      <input id="cname" type="text" autocomplete="name" placeholder="Your full name">
+      <div class="err" id="nameerr">Enter your name</div>
+    </div>
+    <div class="fld">
+      <label for="cphone">Phone number</label>
+      <input id="cphone" type="tel" inputmode="numeric" autocomplete="tel" placeholder="10-digit mobile number">
+      <div class="err" id="phoneerr">Enter a valid 10-digit mobile number</div>
+    </div>
+    <div class="fld">
+      <label for="caddr">Shipping address <span class="opt"></span></label>
+      <textarea id="caddr" rows="2" maxlength="200" autocomplete="street-address" placeholder="House / street / area / town"></textarea>
+    </div>
+    <button id="sendbtn">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2A10 10 0 0 0 2 12c0 1.8.5 3.5 1.3 5L2 22l5.2-1.4A10 10 0 1 0 12 2Zm0 18.2c-1.6 0-3.1-.4-4.4-1.2l-.3-.2-3 .8.8-3-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.6-6.1c-.3-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.3-.6.8-.8 1-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4 0-.5.1-.7l.4-.5c.1-.2.1-.3 0-.5l-.8-1.9c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.2.3-.9.9-.9 2.2s.9 2.5 1.1 2.7c.1.2 1.8 2.8 4.4 3.9 2.6 1.1 2.6.7 3.1.7.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.1-1.2 0-.1-.2-.2-.5-.3Z"/></svg>
+      Send order on WhatsApp
+    </button>
+    <div class="sh-foot" id="shfoot"></div>
+  </div>
+</div>
+
+<div id="lbox" role="dialog" aria-label="Product photo">
+  <button id="lbx" aria-label="Close photo">×</button>
+  <img id="lboxi" alt="">
+  <div id="lbcap"></div>
+  <div id="lbsub"></div>
+</div>
+
+<div id="snack" role="alert">
+  <span class="sp">Order sent on WhatsApp?</span>
+  <button class="keep" id="snackkeep">Keep editing</button>
+  <button class="new" id="snacknew">Start new order</button>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   EDIT YOUR SETTINGS HERE
+   ═══════════════════════════════════════════════════════════════ */
+const CONFIG = {
+  WHATSAPP_NUMBER: '919677950587',        // country code + number, digits only
+  SHOP_NAME: 'SPPM Crackers',
+  // Analytics (optional): sign up free at https://umami.is, add your site,
+  // then paste the Website ID here. Leave '' to disable analytics entirely.
+  ANALYTICS_WEBSITE_ID: '0144491a-8f8c-4e7e-bed5-bfbf1f9b9917',
+  ANALYTICS_SCRIPT: 'https://cloud.umami.is/script.js',
+  // Product images: expects <IMAGE_PATH>thumb/<serial>.webp and <IMAGE_PATH>full/<serial>.webp
+  // Any product with no image file falls back to a plain tile automatically.
+  IMAGE_PATH: 'img/',
+  // How many of the first categories are expanded when the page opens.
+  OPEN_SECTIONS: 3,
+  TAGLINE: 'Diwali price list · Minimum order ₹3,000',
+  MIN_ORDER: 3000,                        // minimum order value in ₹
+  FREE_TRANSPORT_ABOVE: 7000,             // free transport threshold in ₹
+  TERMS: [
+    'Minimum order value ₹3,000.',
+    'Transportation charges extra.',
+    'For orders above ₹7,000, transportation charges are free.',
+    'Prices of a few items, especially fancy items, may vary due to high demand and supply for orders placed from 1st October.',
+    'Discounts, if any, will be provided from time to time based on the order value and references.'
+  ],
+  NOTES: [
+    'Please place orders on or before 30th September to avoid price fluctuations and product availability issues.',
+    'Please take a video while opening the box, for validation.'
+  ],
+
+  /* ── Featured pack ──────────────────────────────────────────────────
+     Promotes one product to a card above the catalogue. Set serial to
+     null to remove the card entirely.                                  */
+  FEATURED: {
+    serial: 189,               // Value Combo Pack. Must exist in CATALOG.
+    badge: 'Most ordered',     // red pill. '' hides it.
+
+    // Transcribed from the new img/full/189.webp contents list. Worth a
+    // read-through against the printed sheet before this goes live — it
+    // came off the artwork by eye.
+    blurb: '30-shot and 12-shot aerial cakes, cylinder and king-of-king '+
+           'bombs, flowerpots, ground chakkars, rockets, twinkling stars, '+
+           'six kinds of sparklers — and a matchbox.',
+
+    items: '43 items',         // the count printed on the pack artwork
+
+    /* Original price in ₹, for a struck-through "was" and a % off badge.
+       Left at 0 deliberately: CATALOG carries one price per product and
+       no MRP, so there is no real number to strike through. Putting an
+       invented one here would be a false discount claim — under the
+       Consumer Protection Act 2019 that is a punishable misleading ad.
+       Set it only if ₹X is a price you genuinely sell at. */
+    wasPrice: 0
+  }
+};
+
+/* ═══════════════════════════════════════════════════════════════
+   PRODUCT CATALOG — edit names / units / prices here
+   Each item: [serial number, name, unit, price in ₹]
+   ═══════════════════════════════════════════════════════════════ */
+const CATALOG = [
+{cat:'Combo Packs',items:[
+[189,'Value Combo Pack','1 Box',4500],
+[190,'Family Combo Pack','1 Box',6500],
+[191,'Grand Combo Pack','1 Box',8500]]},
+{cat:'Kids Varieties',items:[
+[98,'Selfie Stick (3 Pcs)','1 Box',80],
+[99,'Rainbow Smoke','1 Box',185],
+[100,'Lollipop (5 Pcs)','1 Box',260],
+[101,'Ultra Pencil (3 Pcs)','1 Box',115],
+[102,'Pop It Pencil (3 Pcs)','1 Box',170],
+[103,'Waterfalls Pencil (5 Pcs)','1 Box',255],
+[104,'Popcorn Pencil (5 Pcs)','1 Box',255],
+[105,'INF Arjun Tank','1 Pc',665],
+[106,'Kulfi (3 Pcs)','1 Box',415],
+[107,'I-Cone (2 Pcs)','1 Box',345],
+[108,'Sword','1 Pc',205],
+[109,'MRF Bat','1 Pc',170],
+[110,'Emu Egg','1 Box',260],
+[111,'Dora Musical Singer','1 Box',170],
+[112,'Bus Fountain – 3 in 1','1 Pc',400],
+[113,'Pistol 5G (2 Pcs)','1 Box',280],
+[114,'Topgun (5 Pcs)','1 Box',315],
+[115,'Sony Gun','1 Pc',260],
+[116,'Rollcap Gun','1 Pc',70],
+[117,'Rollcap','1 Box',125]]},
+{cat:'Mini Fancy',items:[
+[143,'7 Shot Colour with Crackling (5 Pcs)','1 Box',140],
+[144,'Hi-Tek Yo-Yo (5 Pcs)','1 Box',280],
+[145,'Penta Magic Multi Colour (5 Pcs)','1 Box',210],
+[146,'1¼" Chotta Fancy','1 Pc',55],
+[147,'2" Fancy','1 Pc',130],
+[148,'2" Fancy (3 Pcs)','1 Box',315]]},
+{cat:'Aerial Fancy Shot',items:[
+[149,'2½" Fancy Multi Colour (3 Step)','1 Pc',280],
+[150,'3" Fancy Multi Colour','1 Pc',280],
+[151,'3½" Fancy Multi Colour','1 Pc',315],
+[152,'3½" Fancy Digital Star','1 Pc',380],
+[153,'3½" Fancy Nayagara Falls','1 Pc',380],
+[154,'4" Fancy Multi Colour','1 Pc',450],
+[155,'4" Fancy Multi Colour (2 Pcs)','1 Box',840],
+[156,'4" Fancy Double Ball','1 Pc',595],
+[157,'4" Fancy Multi Colour – 7 Step','1 Pc',540],
+[158,'4" Fancy Multi Colour – 12 Step','1 Pc',560]]},
+{cat:'Aerial Fancy Shot – Special Colour',items:[
+[159,'4" Fancy Wowstar Lemon','1 Pc',650],
+[160,'4" Fancy Wowstar Orange','1 Pc',650],
+[161,'4" Fancy Wowstar Pink','1 Pc',650],
+[162,'4" Fancy Wowstar Purple','1 Pc',650],
+[163,'4" Fancy Blue','1 Pc',650]]},
+{cat:'Multiple Aerial Shots (Sound & Colourful)',items:[
+[164,'Love Dose – 6 Shot Peacock Dance','1 Pc',205],
+[165,'10 Shot Rang Chakkar (Vadivel Brand)','1 Pc',310],
+[166,'12 Shot Rider','1 Pc',170],
+[167,'12 Shot Popcorn Cloud Rider','1 Pc',260],
+[168,'12 Shot Multicolour','1 Pc',300],
+[169,'15 Shot Multicolour','1 Pc',345],
+[170,'25 Shot Rider','1 Pc',300],
+[171,'30 Shot Multi Colour','1 Pc',500],
+[172,'30 Shot Peacock Dance','1 Pc',525],
+[173,'60 Shot Multi Colour','1 Pc',1050],
+[174,'120 Shot Multi Colour','1 Pc',2240],
+[175,'240 Shot Multi Colour','1 Pc',4480],
+[176,'5 × 10 Sizzling Celebration','1 Pc',2660],
+[177,'5 × 10 Holi Celebration','1 Pc',2940],
+[178,'10 × 10 IPL Shot','1 Pc',4060]]},
+{cat:'Single Sound Crackers',items:[
+[1,'3½" Lakshmi','1 Pkt',17],
+[2,'4" Lakshmi','1 Pkt',25],
+[3,'4" Deluxe Lakshmi','1 Pkt',40],
+[4,'5" Deluxe Lakshmi','1 Pkt',55],
+[5,'Gold Lakshmi (12 Ply)','1 Pkt',45],
+[6,'2¾" Kuruvi','1 Pkt',10]]},
+{cat:'Flowerpots',items:[
+[7,'Flower Pots Small','1 Box',65],
+[8,'Flower Pots Big','1 Box',80],
+[9,'Flower Pots Special','1 Box',105],
+[10,'Flower Pots Asokha','1 Box',154],
+[11,'Flower Pots Deluxe (2 Pcs)','1 Box',175],
+[12,'Flower Pots Deluxe (5 Pcs)','1 Box',200],
+[13,'Flower Pots Dazzling Pots (10 Pcs)','1 Box',400],
+[14,'Colour Koti (10 Pcs)','1 Box',260],
+[15,'Tricolour Fountain (5 Pcs)','1 Box',345]]},
+{cat:'Ground Chakkar',items:[
+[16,'Ground Chakkar Big (10 Pcs)','1 Box',50],
+[17,'Ground Chakkar Big (25 Pcs)','1 Box',100],
+[18,'Ground Chakkar Special','1 Box',115],
+[19,'Ground Chakkar Deluxe','1 Box',155],
+[20,'Whizling Wheel (5 Pcs) – Vadivel Brand','1 Box',150],
+[21,'Ground Chakkar Plastic Spinner','1 Box',155],
+[22,'Wire Chakkar','1 Box',225],
+[23,'4 × 4 Wheel','1 Box',225]]},
+{cat:'Twinkling Star',items:[
+[24,'1½" Twinkling Star','1 Box',35],
+[25,'4" Twinkling Star','1 Box',85]]},
+{cat:'Bombs',items:[
+[26,'Bullet Bomb','1 Box',45],
+[27,'Hydro Bomb','1 Box',100],
+[28,'King of King Bomb','1 Box',135],
+[29,'Classic Bomb','1 Box',155],
+[30,'Dinosaur Bomb','1 Box',260],
+[31,'Digital Bomb','1 Box',275]]},
+{cat:'Paper Bombs',items:[
+[32,'Adiyal Small','1 Pc',70],
+[33,'Adiyal ½ kg','1 Pc',135],
+[34,'Adiyal 1 kg','1 Pc',240],
+[35,'Best Rider (5 Pcs)','1 Pkt',140],
+[36,'Crorepathi Currency Bomb (2 Pcs)','1 Box',250],
+[37,'Money Bank (3 Pcs)','1 Box',210]]},
+{cat:'Sound War',items:[
+[38,'Shinchan – Digital Chorsa (5 Pcs)','1 Box',170],
+[39,'Crackling Star – Digital 100 Wala','1 Pc',55],
+[40,'Kungfu – Mini Digital 1000 Wala','1 Pc',105],
+[41,'90 Watts (3 Pcs) – Digital 1000 Wala','1 Pc',265],
+[42,'Magic Whip – Digital 10000 Wala','1 Pc',250]]},
+{cat:'Rockets',items:[
+[43,'Baby Rocket','1 Box',55],
+[44,'Rocket Bomb','1 Box',90],
+[45,'Lunik Rocket','1 Box',170],
+[46,'2 Sound Rocket','1 Box',185],
+[47,'Musical Rocket – Starvel','1 Box',190]]},
+{cat:'Loose Crackers',items:[
+[48,'Red Bijili (50 Pcs)','1 Pkt',20],
+[49,'Stripped Bijili (50 Pcs)','1 Pkt',25],
+[50,'Red Bijili (100 Pcs)','1 Pkt',40],
+[51,'Stripped Bijili (100 Pcs)','1 Pkt',45]]},
+{cat:'Fountains – Peacock Varieties',items:[
+[52,'Peacock Feather (5 Pcs)','1 Box',140],
+[53,'Magic Peacock','1 Pc',205],
+[54,'Bada Peacock','1 Pc',540]]},
+{cat:'Fountains – Special Varieties',items:[
+[55,'Pom Pom (Waterproof) (30 Pcs)','1 Box',245],
+[56,'Color Spinner Mix','1 Box',225],
+[57,'Little Dove','1 Pc',100],
+[58,'Ninja Chakkar (2 Pcs)','1 Box',200],
+[59,'Hulk Star Crackling','1 Pc',230],
+[60,'Fanty Shenny Crackling (3 Pcs)','1 Box',400],
+[61,'Waterqueen – Starvell','1 Pc',275],
+[62,'Touch & Touch (5 Pcs)','1 Box',155],
+[63,'Singing Pop','1 Pc',175],
+[64,'Cylinder Bomb','1 Pc',240]]},
+{cat:'Colour Fountain (1 Pc)',items:[
+[65,'6000','1 Pc',230],
+[66,'Tweet','1 Pc',230],
+[67,'Poppings','1 Pc',230]]},
+{cat:'Colour Fountain (2 Pcs)',items:[
+[68,'Popcorn','2 Pcs',245],
+[69,'Lollipop','2 Pcs',245],
+[70,'Mojito','2 Pcs',245],
+[71,'Feather Touch','2 Pcs',245],
+[72,'Ultra Voltage','2 Pcs',245],
+[73,'Cock Fight','2 Pcs',245]]},
+{cat:'Multi Step Fountains',items:[
+[74,'Lemon Tree – Ayyan Brand (2 in 1)','1 Pc',210],
+[75,'Royal Double Step (2 in 1)','1 Pc',225],
+[76,'Classic Triple Step (3 in 1)','1 Pc',245]]},
+{cat:'3" Colour Fountains (5 Pcs)',items:[
+[77,'Red Apple, Carnival Funfair (5 Pcs)','1 Box',210],
+[78,'Mr Big, Bingo Music (5 Pcs)','1 Box',210],
+[79,'Party Time, Tooty Frooty (5 Pcs)','1 Box',210],
+[80,'Power Pot (5 in 1) Colour','1 Box',245]]},
+{cat:'Grand Super Fountain',items:[
+[81,'Pogo (1 Pc)','1 Box',50],
+[82,'Pogo (5 Pcs)','1 Box',225],
+[83,'Angry Birds (1 Pc)','1 Box',80],
+[84,'Angry Birds (5 Pcs)','1 Box',360],
+[85,'Disco Shower (5 Pcs)','1 Box',140],
+[86,'Golden Rain (5 Pcs)','1 Box',135],
+[87,'Siren (5 Pcs)','1 Box',175],
+[88,'Mega Siren (3 Pcs)','1 Box',225]]},
+{cat:'Novelties Crackers',items:[
+[89,'Zee Boom Baa / Magic Pops','1 Box',15],
+[90,'Colour Electric Stone','1 Box',15],
+[91,'Mega Kit Kat','1 Box',60],
+[92,'Helicopter','1 Box',130],
+[93,'Drone','1 Box',200],
+[94,'Butterfly','1 Box',115],
+[95,'Disco Wheel','1 Box',105],
+[96,'Photo Flash','1 Box',105],
+[97,'Tin Beer','1 Pc',125]]},
+{cat:'Sparklers',items:[
+[118,'7 cm Electric Sparklers','1 Box',15],
+[119,'7 cm Colour Sparklers','1 Box',20],
+[120,'7 cm Green Sparklers','1 Box',20],
+[121,'7 cm Red Sparklers','1 Box',20],
+[122,'10 cm Electric Sparklers','1 Box',25],
+[123,'10 cm Colour Sparklers','1 Box',25],
+[124,'10 cm Green Sparklers','1 Box',30],
+[125,'10 cm Red Sparklers','1 Box',30],
+[126,'12 cm Electric Sparklers','1 Box',35],
+[127,'12 cm Colour Sparklers','1 Box',40],
+[128,'12 cm Green Sparklers','1 Box',45],
+[129,'12 cm Red Sparklers','1 Box',45],
+[130,'15 cm Electric Sparklers','1 Box',55],
+[131,'15 cm Colour Sparklers','1 Box',55],
+[132,'15 cm Green Sparklers','1 Box',65],
+[133,'15 cm Red Sparklers','1 Box',65],
+[134,'15 cm Nanotech Sparklers','1 Box',85],
+[135,'30 cm Electric Sparklers','1 Box',60],
+[136,'30 cm Colour Sparklers','1 Box',60],
+[137,'30 cm Green Sparklers','1 Box',70],
+[138,'30 cm Red Sparklers','1 Box',70],
+[139,'30 cm Nanotech Sparklers','1 Box',90],
+[140,'50 cm Electric Tube','1 Box',200],
+[141,'50 cm Colour Tube','1 Box',225],
+[142,'Umbrella Sparklers','1 Pc',260]]},
+{cat:'Colour Matches',items:[
+[179,'Snake Serpent Big','1 Dozen',50],
+[180,'Colour Matches 3 in 1','1 Unit',80],
+[181,'Colour Matches 5 in 1','1 Unit',220],
+[182,'Colour Matches 10 in 1','1 Unit',310]]},
+{cat:'Gift Boxes',items:[
+[183,'Gift Box – 21 Items','1 Box',340],
+[184,'Gift Box – 25 Items','1 Box',450],
+[185,'Gift Box – 30 Items','1 Box',500],
+[186,'Gift Box – 40 Items','1 Box',780],
+[187,'Gift Box – 45 Items','1 Box',900],
+[188,'Gift Box – 50 Items','1 Box',1050]]}
+];
+
+/* ═══════════ App logic — no edits needed below ═══════════ */
+(function(){
+'use strict';
+const $=id=>document.getElementById(id);
+const rupee=n=>'₹'+n.toLocaleString('en-IN');
+const qty={}, index={};
+CATALOG.forEach(c=>c.items.forEach(it=>{index[it[0]]={name:it[1],unit:it[2],price:it[3],cat:c.cat};}));
+
+/* featured pack — null unless FEATURED names a serial that really exists,
+   so a typo or a deleted product hides the card instead of breaking it */
+const FEAT=(CONFIG.FEATURED&&CONFIG.FEATURED.serial!=null&&index[CONFIG.FEATURED.serial])
+  ?CONFIG.FEATURED:null;
+const FEAT_S=FEAT?String(FEAT.serial):null;
+
+/* analytics — loads only when a website ID is configured; page stays
+   dependency-free otherwise. track() is a no-op if the script is blocked. */
+if(CONFIG.ANALYTICS_WEBSITE_ID){
+  const a=document.createElement('script');
+  a.defer=true;a.src=CONFIG.ANALYTICS_SCRIPT;
+  a.setAttribute('data-website-id',CONFIG.ANALYTICS_WEBSITE_ID);
+  document.head.appendChild(a);
+}
+function track(ev,data){try{if(window.umami)window.umami.track(ev,data)}catch(e){}}
+
+/* cart persistence — quantities live on the customer's phone until sent or cleared */
+const STORE_KEY='sppmOrderV1';
+let sentFlag=false;
+function saveState(){
+  try{localStorage.setItem(STORE_KEY,JSON.stringify(
+    {q:qty,n:$('cname').value,p:$('cphone').value,a:$('caddr').value,sent:sentFlag}))}catch(e){}
+}
+function loadState(){
+  try{return JSON.parse(localStorage.getItem(STORE_KEY)||'null')}catch(e){return null}
+}
+
+document.title=CONFIG.SHOP_NAME+' — Diwali Order';
+$('shopname').textContent=CONFIG.SHOP_NAME;
+$('tagline').textContent=CONFIG.TAGLINE;
+$('foot').textContent=CONFIG.SHOP_NAME+' · Wishing you a happy and safe Diwali';
+$('shfoot').textContent='Free transportation on orders above '+rupee(CONFIG.FREE_TRANSPORT_ABOVE);
+$('tcbody').innerHTML='<ul>'+CONFIG.TERMS.map(t=>'<li>'+t+'</li>').join('')+'</ul>'+
+  '<h3>Please note</h3><ul>'+CONFIG.NOTES.map(t=>'<li>'+t+'</li>').join('')+'</ul>';
+
+const catalogEl=$('catalog');
+catalogEl.innerHTML=CATALOG.map((c,ci)=>{
+  const rows=c.items.map(it=>{
+    const isFeat=FEAT&&it[0]===FEAT.serial;
+    return '<div class="item'+(isFeat?' feat':'')+'" data-s="'+it[0]+'" data-name="'+(it[1]+' '+it[0]).toLowerCase().replace(/"/g,'&quot;')+'">'+
+    '<div class="thb"><img src="'+CONFIG.IMAGE_PATH+'thumb/'+it[0]+'.webp" loading="lazy" '+
+    'width="84" height="84" alt="" onerror="this.remove()"></div>'+
+    '<div class="txt">'+(isFeat&&FEAT.badge?'<span class="feat-tag">'+FEAT.badge+'</span>':'')+
+    '<div class="nm">'+it[1]+'</div><div class="mt">'+it[2]+'</div></div>'+
+    '<div class="ctl"><span class="pr">'+rupee(it[3])+'</span>'+
+    '<button class="add" data-a="inc" aria-label="Add '+it[1].replace(/"/g,'&quot;')+'">Add</button>'+
+    '<div class="step"><button data-a="dec" aria-label="Decrease quantity">−</button>'+
+    '<span class="q">0</span><button data-a="inc" aria-label="Increase quantity">+</button></div></div></div>';
+  }).join('');
+  return '<details class="cat" data-ci="'+ci+'"'+(ci<CONFIG.OPEN_SECTIONS?' open':'')+
+    '><summary class="cat-head">'+
+    '<span class="cat-name">'+c.cat+'</span>'+
+    '<span class="cat-count">'+c.items.length+' items <span class="chev">▶</span></span></summary>'+
+    '<div class="items">'+rows+'</div></details>';
+}).join('');
+
+/* ═══════════ Featured pack card ═══════════ */
+if(FEAT){
+  const it=index[FEAT.serial], hero=$('hero');
+  $('heroname').textContent=it.name;
+  $('herocode').textContent='#'+FEAT.serial;
+  $('heroblurb').textContent=FEAT.blurb||'';
+  $('heroprice').textContent=rupee(it.price);
+  $('heroadd').textContent='Add to order · '+rupee(it.price);
+  $('herothb').innerHTML='<img src="'+CONFIG.IMAGE_PATH+'thumb/'+FEAT.serial+'.webp" '+
+    'width="88" height="88" alt="" onerror="this.remove()">';
+
+  const badges=[];
+  if(FEAT.badge) badges.push('<span class="hero-badge hot">'+FEAT.badge+'</span>');
+  if(FEAT.items) badges.push('<span class="hero-badge save">'+FEAT.items+'</span>');
+  /* only claim a discount when a real prior price is configured */
+  if(FEAT.wasPrice>it.price){
+    const off=Math.round((1-it.price/FEAT.wasPrice)*100);
+    $('herowas').textContent=rupee(FEAT.wasPrice);
+    $('herooff').textContent=off+'% off';
+    badges.push('<span class="hero-badge save">Flat '+off+'% off</span>');
+  }
+  $('herobadges').innerHTML=badges.join('');
+
+  hero.hidden=false;
+
+  hero.addEventListener('click',e=>{
+    const btn=e.target.closest('button[data-a]');
+    if(btn){
+      if(btn.dataset.a==='inc'&&!qty[FEAT_S])
+        track('add-item',{item:it.name,category:it.cat,via:'featured'});
+      setQty(FEAT_S,(qty[FEAT_S]||0)+(btn.dataset.a==='inc'?1:-1));
+      return;
+    }
+    const t=e.target.closest('.hero-thb');
+    if(t&&t.querySelector('img')) openPhoto(FEAT_S);
+  });
+
+  $('herojump').addEventListener('click',()=>{
+    const row=catalogEl.querySelector('.item[data-s="'+FEAT_S+'"]');
+    if(!row) return;
+    const det=row.closest('details.cat');
+    if(det) det.open=true;
+    const y=row.getBoundingClientRect().top+window.pageYOffset-topEl.offsetHeight-8;
+    window.scrollTo({top:Math.max(0,y),behavior:'instant'});
+    pulse(row,'flash');
+    track('featured-jump',{item:it.name});
+  });
+}
+
+/* ═══════════ Category chips + collapsing app bar ═══════════
+   One scroll handler, rAF-throttled, doing three jobs: keep --hdr in
+   sync (the open category header sticks to it), fold the wordmark row
+   away once you're past the top, and highlight the chip for whichever
+   category you're currently inside. */
+const topEl=document.querySelector('header.top');
+const chipsEl=$('chips');
+chipsEl.innerHTML=CATALOG.map((c,i)=>
+  '<button class="chip" type="button" data-ci="'+i+'" aria-current="false">'+c.cat+'</button>').join('');
+const chipEls=[].slice.call(chipsEl.querySelectorAll('.chip'));
+const catEls=[].slice.call(catalogEl.querySelectorAll('details.cat'));
+
+chipsEl.addEventListener('click',e=>{
+  const b=e.target.closest('.chip');
+  if(!b) return;
+  const d=catEls[+b.dataset.ci];
+  if(!d) return;
+  d.open=true;
+  /* measure after opening — the header may fold on the way there */
+  const y=d.getBoundingClientRect().top+window.pageYOffset-topEl.offsetHeight-2;
+  /* Instant, not smooth: the catalogue is ~5,000px tall, so smooth-scrolling
+     to Sparklers meant several seconds of flying past 150 rows. A chip is
+     navigation — it should land. The sticky category header tells you where. */
+  /* 'instant', not 'auto' — 'auto' defers to the computed scroll-behavior,
+     which is `smooth` on <html>, so the jump crawled. */
+  window.scrollTo({top:Math.max(0,y),behavior:'instant'});
+  track('chip-jump',{category:CATALOG[+b.dataset.ci].cat});
+});
+
+let activeCi=-2;
+function syncActiveChip(){
+  const cut=topEl.offsetHeight+10;
+  let cur=-1;
+  for(let i=0;i<catEls.length;i++){
+    const d=catEls[i];
+    if(d.classList.contains('hide')) continue;
+    if(d.getBoundingClientRect().top<=cut) cur=+d.dataset.ci; else break;
+  }
+  if(cur===activeCi) return;
+  activeCi=cur;
+  chipEls.forEach(c=>c.setAttribute('aria-current',(+c.dataset.ci===cur)?'true':'false'));
+  const act=chipEls[cur];
+  if(act) act.scrollIntoView({block:'nearest',inline:'center',behavior:'smooth'});
+}
+function syncHdr(){
+  document.documentElement.style.setProperty('--hdr',topEl.offsetHeight+'px');
+}
+let ticking=false;
+function onScroll(){
+  if(ticking) return;
+  ticking=true;
+  requestAnimationFrame(()=>{ticking=false;syncHdr();syncActiveChip();});
+}
+window.addEventListener('scroll',onScroll,{passive:true});
+window.addEventListener('resize',()=>{syncHdr();syncActiveChip();});
+
+/* fold the wordmark row once the probe scrolls out of view */
+if('IntersectionObserver' in window){
+  new IntersectionObserver(es=>{
+    topEl.classList.toggle('compact',!es[0].isIntersecting);
+    /* the fold animates, so re-measure while it settles */
+    const t0=Date.now();
+    (function settle(){syncHdr();if(Date.now()-t0<300)requestAnimationFrame(settle);})();
+  }).observe($('topsent'));
+}
+syncHdr();
+
+function setQty(s,q){
+  q=Math.max(0,Math.min(99,q));
+  if(q===0) delete qty[s]; else qty[s]=q;
+  const row=catalogEl.querySelector('.item[data-s="'+s+'"]');
+  if(row){row.classList.toggle('on',q>0);row.querySelector('.q').textContent=q;}
+  /* the featured card shows the same product as one of the rows, so both
+     steppers have to reflect the one quantity */
+  if(FEAT_S&&s===FEAT_S){
+    $('hero').classList.toggle('on',q>0);
+    $('heroq').textContent=q;
+  }
+  refreshBar();
+  saveState();
+  if($('sheet').classList.contains('open')) renderSheet();
+}
+function totals(){
+  let units=0,products=0,amt=0;
+  for(const s in qty){units+=qty[s];products++;amt+=qty[s]*index[s].price;}
+  return {units,products,amt};
+}
+/* `restoring` is raised only while the saved cart is being replayed on load,
+   so a cart restored already above the threshold doesn't flare on arrival.
+   (Guarding on a null/"first paint" value instead does not work: on a fresh
+   visit with no saved cart, refreshBar is never called before the user's
+   first tap, so the first genuine crossing would be swallowed.) */
+let wasFree=false, wasMin=false, prevAmt=0, restoring=false;
+/* restart an animation that may already be on the element: drop the class,
+   force a reflow so the browser sees the removal, put it back. */
+function pulse(el,cls){el.classList.remove(cls);void el.offsetWidth;el.classList.add(cls);}
+function refreshBar(){
+  const t=totals();
+  $('cbtotal').textContent=rupee(t.amt);
+  $('cartbar').classList.toggle('show',t.units>0);
+  /* one continuous bar: full = free delivery, tick marks the minimum order */
+  const items=t.units+(t.units===1?' item':' items');
+  const goal=Math.max(CONFIG.FREE_TRANSPORT_ABOVE,CONFIG.MIN_ORDER);
+  let note,state;
+  if(t.amt<CONFIG.MIN_ORDER){
+    note='<b>'+rupee(CONFIG.MIN_ORDER-t.amt)+'</b> more to order'; state='lo';
+  }else if(t.amt<CONFIG.FREE_TRANSPORT_ABOVE){
+    note='<b>'+rupee(CONFIG.FREE_TRANSPORT_ABOVE-t.amt)+'</b> to free delivery'; state='mid';
+  }else{
+    note='free delivery ✓'; state='ok';
+  }
+  $('cbitems').textContent=items;
+  /* innerHTML only ever receives a formatted rupee amount plus fixed copy */
+  $('cbnote').innerHTML=note;
+  $('cbnote').className='cb-note '+state;
+  $('cbfill').style.width=Math.min(100,t.amt/goal*100)+'%';
+  $('cbfill').classList.toggle('ok',t.amt>=CONFIG.MIN_ORDER);
+  $('cbtick').style.left=(CONFIG.MIN_ORDER/goal*100)+'%';
+  $('cbtick').style.display=CONFIG.MIN_ORDER<goal?'block':'none';
+
+  /* sweep the fill whenever the order grows. Only on growth — decrementing
+     shouldn't feel like a reward, and a restored cart shouldn't animate. */
+  if(t.amt>prevAmt&&!restoring){
+    pulse($('cbfill'),'bump');
+    pulse($('cbtotal'),'pop');
+  }
+
+  /* blast icon: appears the moment the order becomes sendable and stays,
+     popping once on the crossing itself */
+  const min=t.amt>=CONFIG.MIN_ORDER;
+  $('cbblast').classList.toggle('on',min);
+  if(min&&!wasMin&&!restoring) pulse($('cbblast'),'pop');
+
+  /* single gold flare on the crossing into free delivery — not on every
+     refresh while already above it */
+  const free=t.amt>=CONFIG.FREE_TRANSPORT_ABOVE;
+  if(free&&!wasFree&&!restoring) pulse($('cartbar'),'flare');
+
+  wasMin=min; wasFree=free; prevAmt=t.amt;
+}
+catalogEl.addEventListener('click',e=>{
+  const btn=e.target.closest('button[data-a]');
+  if(!btn) return;
+  const s=btn.closest('.item').dataset.s;
+  if(btn.dataset.a==='inc'&&!qty[s]) track('add-item',{item:index[s].name,category:index[s].cat});
+  setQty(s,(qty[s]||0)+(btn.dataset.a==='inc'?1:-1));
+});
+
+/* search */
+let deb;
+$('search').addEventListener('input',e=>{
+  clearTimeout(deb);
+  deb=setTimeout(()=>filter(e.target.value.trim().toLowerCase()),120);
+});
+function filter(q){
+  let any=false;
+  catalogEl.querySelectorAll('details.cat').forEach(d=>{
+    let n=0;
+    d.querySelectorAll('.item').forEach(row=>{
+      const hit=!q||row.dataset.name.includes(q);
+      row.classList.toggle('hide',!hit);
+      if(hit)n++;
+    });
+    d.classList.toggle('hide',n===0);
+    d.open=q?n>0:(+d.dataset.ci<CONFIG.OPEN_SECTIONS);
+    if(n>0)any=true;
+  });
+  $('noresult').style.display=any?'none':'block';
+  syncHdr();syncActiveChip();
+}
+
+/* order sheet */
+const sheet=$('sheet');
+function openSheet(){renderSheet();sheet.classList.add('open');document.body.style.overflow='hidden';track('view-order');}
+function closeSheet(){sheet.classList.remove('open');document.body.style.overflow='';}
+$('cartbar').addEventListener('click',openSheet);
+$('backbtn').addEventListener('click',closeSheet);
+
+function renderSheet(){
+  const t=totals(), ol=$('orderlist');
+  if(t.units===0){
+    ol.innerHTML='<div class="empty">Your order is empty.<br>Go back and add some crackers!</div>';
+  }else{
+    ol.innerHTML=Object.keys(qty).map(s=>{
+      const it=index[s];
+      return '<div class="orow" data-s="'+s+'">'+
+      /* deliberately NOT loading="lazy" here, unlike the catalogue: these
+         rows are built while #sheet is still display:none, so the lazy
+         intersection check never fires and any product you hadn't scrolled
+         past in the catalogue showed a blank tile forever. The order only
+         ever holds a handful of rows, and seeing them is the point. */
+      '<div class="othb"><img src="'+CONFIG.IMAGE_PATH+'thumb/'+s+'.webp" '+
+      'width="56" height="56" alt="" onerror="this.remove()"></div>'+
+      '<div class="oi"><div class="onm">'+it.name+'</div>'+
+      '<div class="omt">'+it.unit+' · '+rupee(it.price)+'</div>'+
+      '<div class="step"><button data-a="dec" aria-label="Decrease">−</button><span class="q">'+qty[s]+'</span>'+
+      '<button data-a="inc" aria-label="Increase">+</button></div></div>'+
+      '<span class="oline">'+rupee(qty[s]*it.price)+'</span></div>';
+    }).join('');
+  }
+  $('shtotal').textContent=rupee(t.amt);
+  const minN=$('minnote'), ship=$('shipnote');
+  if(t.amt<CONFIG.MIN_ORDER){
+    minN.style.display='block';
+    minN.textContent='Add '+rupee(CONFIG.MIN_ORDER-t.amt)+' more to reach the minimum order of '+rupee(CONFIG.MIN_ORDER)+'.';
+  }else minN.style.display='none';
+  if(t.amt>=CONFIG.FREE_TRANSPORT_ABOVE){
+    ship.className='note ok';ship.textContent='Your order qualifies for free transportation.';
+  }else{
+    ship.className='note warn';
+    ship.textContent='Transportation charges extra. Orders above '+rupee(CONFIG.FREE_TRANSPORT_ABOVE)+' get free transportation.';
+  }
+  $('sendbtn').disabled=t.units===0||t.amt<CONFIG.MIN_ORDER;
+  $('clearbtn').style.display=t.units>0?'block':'none';
+}
+$('orderlist').addEventListener('click',e=>{
+  const btn=e.target.closest('button[data-a]');
+  if(!btn) return;
+  const s=btn.closest('.orow').dataset.s;
+  setQty(s,(qty[s]||0)+(btn.dataset.a==='inc'?1:-1));
+});
+/* order-row thumbnails open the same lightbox as the catalogue. closePhoto
+   already only restores body scrolling when the sheet isn't open, so
+   dismissing the photo drops you back on the order, not the catalogue. */
+$('orderlist').addEventListener('click',e=>{
+  const t=e.target.closest('.othb');
+  if(t&&t.querySelector('img')) openPhoto(t.closest('.orow').dataset.s);
+});
+
+/* product photo — tap a thumbnail to see the full-size image */
+const lbox=$('lbox');
+function openPhoto(s){
+  const it=index[s]; if(!it) return;
+  $('lboxi').src=CONFIG.IMAGE_PATH+'full/'+s+'.webp';
+  $('lboxi').alt=it.name;
+  $('lbcap').textContent=it.name;
+  $('lbsub').textContent=it.unit+' · '+rupee(it.price);
+  lbox.classList.add('on');document.body.style.overflow='hidden';
+  track('view-photo',{item:it.name});
+}
+function closePhoto(){
+  lbox.classList.remove('on');$('lboxi').removeAttribute('src');
+  if(!sheet.classList.contains('open')) document.body.style.overflow='';
+}
+catalogEl.addEventListener('click',e=>{
+  const t=e.target.closest('.thb');
+  if(t&&t.querySelector('img')) openPhoto(t.closest('.item').dataset.s);
+});
+$('lbx').addEventListener('click',closePhoto);
+lbox.addEventListener('click',e=>{if(e.target===lbox||e.target.id==='lboxi')closePhoto();});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'&&lbox.classList.contains('on')) closePhoto();
+});
+
+/* clear order — two-tap confirm */
+function clearCart(){
+  Object.keys(qty).forEach(s=>delete qty[s]);
+  catalogEl.querySelectorAll('.item.on').forEach(r=>{
+    r.classList.remove('on');r.querySelector('.q').textContent='0';});
+  refreshBar();saveState();
+  if(sheet.classList.contains('open')) renderSheet();
+}
+let clearArm=null;
+$('clearbtn').addEventListener('click',()=>{
+  const b=$('clearbtn');
+  if(clearArm){clearTimeout(clearArm);clearArm=null;b.textContent='Clear order';clearCart();return;}
+  b.textContent='Tap again to confirm';
+  clearArm=setTimeout(()=>{clearArm=null;b.textContent='Clear order';},3000);
+});
+
+/* "order sent?" banner — shown when returning from WhatsApp */
+const snack=$('snack');
+function maybeShowSnack(){
+  if(sentFlag&&Object.keys(qty).length) snack.classList.add('show');
+}
+$('snackkeep').addEventListener('click',()=>{
+  sentFlag=false;saveState();snack.classList.remove('show');
+});
+$('snacknew').addEventListener('click',()=>{
+  sentFlag=false;clearCart();snack.classList.remove('show');closeSheet();
+});
+document.addEventListener('visibilitychange',()=>{
+  if(document.visibilityState==='visible') maybeShowSnack();
+});
+window.addEventListener('pageshow',e=>{if(e.persisted) maybeShowSnack();});
+
+/* validation + WhatsApp */
+$('cname').addEventListener('input',()=>{$('nameerr').classList.remove('show');saveState();});
+$('cphone').addEventListener('input',()=>{$('phoneerr').classList.remove('show');saveState();});
+$('caddr').addEventListener('input',saveState);
+
+/* field events — report each field's value when the customer finishes
+   editing it (helps debug order issues later) */
+function fieldTracker(id,ev){
+  let last='';
+  $(id).addEventListener('blur',()=>{
+    const v=$(id).value.trim();
+    if(v&&v!==last){last=v;track(ev,{value:v});}
+  });
+}
+fieldTracker('cname','field-name');
+fieldTracker('cphone','field-phone');
+fieldTracker('caddr','field-address');
+function cleanPhone(v){
+  let d=v.replace(/\D/g,'');
+  if(d.length===12&&d.startsWith('91')) d=d.slice(2);
+  if(d.length===11&&d.startsWith('0')) d=d.slice(1);
+  return d;
+}
+function buildMessage(name,phone){
+  const t=totals();
+  let i=0;
+  const lines=Object.keys(qty).map(s=>{
+    const it=index[s];i++;
+    return i+'. '+it.name+' — '+qty[s]+' × '+rupee(it.price)+' = '+rupee(qty[s]*it.price);
+  });
+  const addr=$('caddr').value.trim();
+  let msg='🧨 *New order — '+CONFIG.SHOP_NAME+'*\n\n'+
+    '*Name:* '+name+'\n*Phone:* '+phone+
+    (addr?'\n*Address:* '+addr:'')+'\n\n*Items:*\n'+lines.join('\n')+
+    '\n\n*Total: '+rupee(t.amt)+'* ('+t.products+' products, '+t.units+' units)\n\n';
+  msg+=t.amt>=CONFIG.FREE_TRANSPORT_ABOVE
+    ?'Eligible for free transportation'
+    :'Transportation charges extra (free for orders above '+rupee(CONFIG.FREE_TRANSPORT_ABOVE)+')';
+  return msg;
+}
+$('sendbtn').addEventListener('click',()=>{
+  const name=$('cname').value.trim(), ph=cleanPhone($('cphone').value);
+  const missing=[];
+  if(name.length<2){$('nameerr').classList.add('show');missing.push('name');}
+  if(ph.length!==10){$('phoneerr').classList.add('show');missing.push('phone');}
+  if(missing.length){
+    track('send-blocked',{missing:missing.join('+'),name:name,phone:$('cphone').value.trim()});
+    return;
+  }
+  const url='https://wa.me/'+CONFIG.WHATSAPP_NUMBER+'?text='+encodeURIComponent(buildMessage(name,$('cphone').value.trim()));
+  const t=totals();
+  track('send-order',{amount:t.amt,products:t.products,units:t.units,
+    name:name,phone:$('cphone').value.trim(),address:$('caddr').value.trim()});
+  sentFlag=true;saveState();
+  const w=window.open(url,'_blank');
+  if(!w) location.href=url;
+});
+
+/* restore saved cart on load */
+(function(){
+  const saved=loadState();
+  if(!saved) return;
+  sentFlag=!!saved.sent;
+  if(saved.n) $('cname').value=saved.n;
+  if(saved.p) $('cphone').value=saved.p;
+  if(saved.a) $('caddr').value=saved.a;
+  restoring=true;
+  if(saved.q) for(const s in saved.q){
+    if(index[s]) setQty(s,parseInt(saved.q[s],10)||0);
+  }
+  restoring=false;
+  maybeShowSnack();
+})();
+})();
+</script>
+</body>
+</html>
